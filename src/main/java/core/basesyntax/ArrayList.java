@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
     private int capacity;
     private int loadFactor;
 
-    public ArrayList(){
+    public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
@@ -26,7 +26,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(String.format("Index %d is out of bounds for ArrayList with size %d", index, size));
+            throw new ArrayListIndexOutOfBoundsException(String.format("Index %d is out "+
+                    " of bounds for ArrayList with size %d", index, size));
         }
         for (int i = size - 1; i >= index; i--) {
             elements[i + 1] = elements[i];
