@@ -14,9 +14,10 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public ArrayList(int capacity){
+    public ArrayList(int capacity) {
         elements = (T[]) new Object[capacity];
     }
+
     @Override
     public void add(T value) {
         elements[size++] = value;
@@ -71,7 +72,8 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element " + element + " is not found in the ArrayList");
+        throw new NoSuchElementException("Element " + element
+                + " is not found in the ArrayList");
     }
 
     @Override
