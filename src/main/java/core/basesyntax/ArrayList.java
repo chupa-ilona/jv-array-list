@@ -1,8 +1,10 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final float GROWTH_FACTOR = 1.5F;
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elements;
     private int size;
@@ -12,11 +14,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList(int capacity) {
-        if (capacity <= 0) {
-            elements = (T[]) new Object[DEFAULT_CAPACITY];
-        } else {
-            elements = (T[]) new Object[capacity];
+        if (capacity < 0) {
+            throw new IllegalArgumentException(
+                    "Illegal Capacity: " + capacity);
         }
+        elements = (T[]) new Object[capacity];
     }
 
     @Override
@@ -27,13 +29,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Index %d is out of bounds for ArrayList with size %d",
+                            index, size));
+        }
 
         ensureCapacity();
 
-        for (int i = size - 1; i >= index; i--) {
-            elements[i + 1] = elements[i];
-        }
+        System.arraycopy(elements, index,
+                elements, index + 1,
+                size - index);
 
         elements[index] = value;
         size++;
@@ -41,6 +47,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("List cannot be null");
+        }
+
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -60,15 +70,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Index %d is out of bounds for ArrayList with size %d",
+                            index, size));
+        }
+
         final T removedElement = elements[index];
 
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1,
+                elements, index,
+                size - index - 1);
 
         elements[size - 1] = null;
         size--;
+
         return removedElement;
     }
 
@@ -102,13 +118,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == elements.length) {
-            T[] newElements = (T[]) new Object[elements.length * 2];
-
-            for (int i = 0; i < elements.length; i++) {
-                newElements[i] = elements[i];
-            }
-
-            elements = newElements;
+            resize();
         }
     }
 
@@ -126,5 +136,16 @@ public class ArrayList<T> implements List<T> {
                     String.format("Index %d is out of bounds for ArrayList with size %d",
                             index, size));
         }
+    }
+
+    private void resize() {
+        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+        T[] newElements = (T[]) new Object[newCapacity];
+
+        System.arraycopy(elements, 0,
+                newElements, 0,
+                elements.length);
+
+        elements = newElements;
     }
 }
