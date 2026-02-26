@@ -61,10 +61,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = elements[index];
+        final T removedElement = elements[index];
+
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
+
         elements[size - 1] = null;
         size--;
         return removedElement;
