@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-
     private T[] elements;
     private int size;
 
@@ -62,23 +61,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-
         T removedElement = elements[index];
-
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
-
         elements[size - 1] = null;
         size--;
-
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-
             if (element == null) {
                 if (elements[i] == null) {
                     return remove(i);
